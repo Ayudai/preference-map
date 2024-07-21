@@ -1,6 +1,13 @@
 import { useState, useCallback } from "react";
 import { PreferenceMap, MapType } from "@/types/map";
 import { FixedLayout } from "@/types/map";
+import {
+  addMap,
+  updateMap,
+  updateMapsLayout,
+  setMaps,
+} from "@/modules/mapsSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 const fixedLayouts: FixedLayout = {
   layout1: [
@@ -73,7 +80,8 @@ const colors = [
 
 // Custom hook for map management
 export const useMapManagement = () => {
-  const [maps, setMaps] = useState<PreferenceMap[]>([]);
+  const maps = useSelector((state: any) => state.maps.maps);
+  const dispatch = useDispatch();
 
   const addNewMap = useCallback(
     (type: MapType, data?: Partial<PreferenceMap>) => {
@@ -96,27 +104,14 @@ export const useMapManagement = () => {
             : 2,
         ...data,
       };
-      setMaps((prevMaps) => [...prevMaps, newMap]);
+      console.log(newMap);
+      dispatch(addMap(newMap));
     },
     []
   );
 
   const onLayoutChange = useCallback((layout: any) => {
-    setMaps((prevMaps) =>
-      prevMaps.map((map) => {
-        const layoutItem = layout.find((item: any) => item.i === map.id);
-        if (layoutItem) {
-          return {
-            ...map,
-            x: layoutItem.x,
-            y: layoutItem.y,
-            w: layoutItem.w,
-            h: layoutItem.h,
-          };
-        }
-        return map;
-      })
-    );
+    dispatch(updateMapsLayout(layout));
   }, []);
 
   const setFixedLayout = useCallback((layoutKey: string) => {
@@ -127,16 +122,14 @@ export const useMapManagement = () => {
         color: colors[Math.floor(Math.random() * colors.length)],
         content: "",
       }));
-      setMaps(newMaps);
+      dispatch(setMaps(newMaps));
     } else {
-      setMaps([]);
+      console.error("Invalid layout key");
     }
   }, []);
 
   const handleUpdateMap = (updatedMap: PreferenceMap) => {
-    setMaps((prevMaps) =>
-      prevMaps.map((map) => (map.id === updatedMap.id ? updatedMap : map))
-    );
+    dispatch(updateMap(updatedMap));
   };
 
   return { maps, addNewMap, onLayoutChange, setFixedLayout, handleUpdateMap };

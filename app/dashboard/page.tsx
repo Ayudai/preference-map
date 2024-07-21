@@ -11,6 +11,7 @@ import { LayoutSelectorProps } from "@/types/map";
 import { MapForm } from "@/components/map/mapForm";
 import { MapItem } from "@/components/map/mapItem";
 import { useMapManagement } from "@/hook/useMapManagement";
+import { PreferenceMap } from "@/types/map";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -50,7 +51,7 @@ export default function Dashboard() {
 
   const memoizedLayouts = useMemo(
     () => ({
-      lg: maps.map((map) => ({ ...map, i: map.id })),
+      lg: maps.map((map: PreferenceMap) => ({ ...map, i: map.id })),
     }),
     [maps]
   );
@@ -88,7 +89,7 @@ export default function Dashboard() {
         rowHeight={150}
         onLayoutChange={onLayoutChange}
       >
-        {maps.map((map) => (
+        {maps.map((map: PreferenceMap) => (
           <div key={map.id}>
             <MapItem map={map} />
           </div>
