@@ -89,7 +89,7 @@ export const MapItem = React.memo(({ map }: { map: PreferenceMap }) => {
 
   return (
     <div
-      className={`${map.color} p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow h-full w-full`}
+      className={`p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow h-full w-full ${map.color}`}
     >
       <h2 className="text-xl font-semibold mb-2">{map.title}</h2>
       {renderMapContent()}
